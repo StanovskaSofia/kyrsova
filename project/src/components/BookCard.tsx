@@ -5,7 +5,10 @@ import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../types/supabase';
 
-interface BookCardProps extends Book {}
+interface BookCardProps extends Book {
+  isWishlisted: boolean;
+  isRead?: boolean;
+}
 
 export const BookCard: React.FC<BookCardProps> = ({
   id,
@@ -13,10 +16,10 @@ export const BookCard: React.FC<BookCardProps> = ({
   author,
   cover,
   description,
+  isWishlisted,
 }) => {
   const {
     readList,
-    wishlist,
     addToReadList,
     removeFromReadList,
     addToWishlist,
@@ -26,14 +29,11 @@ export const BookCard: React.FC<BookCardProps> = ({
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
-  // Перевірка статусу у списках
   const isBookInReadList = readList.some((book) => book.id === id);
-  const isBookInWishlist = wishlist.some((book) => book.id === id);
 
   const toggleReadStatus = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) return;
-
     if (isBookInReadList) {
       removeFromReadList(id);
     } else {
@@ -44,8 +44,7 @@ export const BookCard: React.FC<BookCardProps> = ({
   const toggleWishlistStatus = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) return;
-
-    if (isBookInWishlist) {
+    if (isWishlisted) {
       removeFromWishlist(id);
     } else {
       addToWishlist({ id, title, author, cover, description });
@@ -57,7 +56,6 @@ export const BookCard: React.FC<BookCardProps> = ({
     navigate(`/book/${id}`);
   };
 
-  // Обрізати опис, якщо він довший за 100 символів
   const truncatedDescription =
     description.length > 100 ? `${description.slice(0, 100)}...` : description;
 
@@ -75,21 +73,19 @@ export const BookCard: React.FC<BookCardProps> = ({
           </div>
           {user && (
             <div className="flex space-x-2">
-              {/* Wishlist button */}
               <button
                 onClick={toggleWishlistStatus}
                 className={`p-2 rounded-full ${
-                  isBookInWishlist
+                  isWishlisted
                     ? 'text-pink-500 hover:text-pink-600'
                     : 'text-gray-400 hover:text-pink-500'
                 }`}
               >
                 <Heart
                   className="h-5 w-5"
-                  fill={isBookInWishlist ? 'currentColor' : 'none'}
+                  fill={isWishlisted ? 'currentColor' : 'none'}
                 />
               </button>
-              {/* Read list button */}
               <button
                 onClick={toggleReadStatus}
                 className={`p-2 rounded-full ${

@@ -172,28 +172,27 @@ export const useBookStore = create<BookState>((set, get) => ({
   },
 
   // Пошук книг
-  searchBooks: async (query) => {
-    try {
-      if (!query.trim()) {
-        set({ books: [] });
-        return;
-      }
-
-      set({ loading: true, error: null });
-      const { data, error } = await supabase
-        .from('books')
-        .select('*')
-        .ilike('title', `%${query}%`)
-        .order('title', { ascending: true });
-
-      if (error) throw error;
-      set({ books: data || [] });
-    } catch (error) {
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
+searchBooks: async (query) => {
+  try {
+    if (!query.trim()) {
+      set({ books: [] });
+      return;
     }
-  },
+    set({ loading: true, error: null });
+    const { data, error } = await supabase
+      .from('books')
+      .select('*')
+      .or(`title.ilike.%${query}%,author.ilike.%${query}%`) // Пошук за назвою або автором
+      .order('title', { ascending: true });
+    if (error) throw error;
+    set({ books: data || [] });
+  } catch (error) {
+    set({ error: (error as Error).message });
+  } finally {
+    set({ loading: false });
+  }
+},
+
 
   // Очистити помилку
   clearError: () => set({ error: null }),

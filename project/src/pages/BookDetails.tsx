@@ -2,19 +2,15 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { Heart, BookOpen, ArrowLeft } from 'lucide-react';
 import { useBookStore } from '../store/bookStore';
 import { useAuthStore } from '../store/authStore';
-
 export const BookDetails = () => {
   const navigate = useNavigate();
   const { selectedBook, wishlist, readList, addToWishlist, removeFromWishlist, addToReadList, removeFromReadList } = useBookStore();
   const { user } = useAuthStore();
-
   if (!selectedBook) {
     return <Navigate to="/" replace />;
   }
-
   const isWishlisted = wishlist.some(book => book.id === selectedBook.id);
   const isRead = readList.some(book => book.id === selectedBook.id);
-
   const handleWishlist = () => {
     if (!user) {
       navigate('/login');
@@ -26,7 +22,6 @@ export const BookDetails = () => {
       addToWishlist(selectedBook);
     }
   };
-
   const handleReadList = () => {
     if (!user) {
       navigate('/login');
@@ -38,7 +33,6 @@ export const BookDetails = () => {
       addToReadList(selectedBook);
     }
   };
-
   return (
     <div className="min-h-screen bg-pink-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -49,7 +43,6 @@ export const BookDetails = () => {
           <ArrowLeft className="h-5 w-5" />
           <span>Назад</span>
         </button>
-
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             <div className="md:flex-shrink-0">

@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { Navigate } from 'react-router-dom';
 
 export const ReadList = () => {
-  const { readList, loading, error, fetchReadList } = useBookStore();
+  const { readList, wishlist, loading, error, fetchReadList } = useBookStore();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const ReadList = () => {
     <div className="min-h-screen bg-pink-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Прочитані книги</h1>
-        
+
         {loading ? (
           <div className="text-center py-12">
             <p className="text-gray-600">Завантаження...</p>
@@ -34,7 +34,11 @@ export const ReadList = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {readList.map((book) => (
-              <BookCard key={book.id} {...book} isRead={true} />
+              <BookCard
+                key={book.id}
+                {...book}
+                isWishlisted={wishlist.some((w) => w.id === book.id)} // Check if the book is wishlisted
+              />
             ))}
           </div>
         )}
