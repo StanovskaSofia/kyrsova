@@ -9,12 +9,12 @@ export interface Book {
 }
 
 export interface AuthState {
-  user: User | null;
+  user: any | null;
   loading: boolean;
   error: string | null;
-  setUser: (user: User | null) => void;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  setUser: (user: any | null) => void;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   clearError: () => void;
 }

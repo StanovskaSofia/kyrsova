@@ -37,7 +37,7 @@ export const ReadList = () => {
               <BookCard
                 key={book.id}
                 {...book}
-                isWishlisted={wishlist.some((w) => w.id === book.id)} // Check if the book is wishlisted
+                isWishlisted={wishlist.some((w) => w.id === book.id)} 
               />
             ))}
           </div>

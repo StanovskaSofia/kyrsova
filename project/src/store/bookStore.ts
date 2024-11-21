@@ -11,13 +11,10 @@ export const useBookStore = create<BookState>((set, get) => ({
   loading: false,
   error: null,
 
-  // Задати список книг
   setBooks: (books) => set({ books }),
 
-  // Задати вибрану книгу
   setSelectedBook: (book) => set({ selectedBook: book }),
 
-  // Отримати список бажаних книг
   fetchWishlist: async () => {
     try {
       set({ loading: true, error: null });
@@ -39,7 +36,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Отримати список прочитаних книг
   fetchReadList: async () => {
     try {
       set({ loading: true, error: null });
@@ -61,7 +57,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Додати книгу до списку бажаних
   addToWishlist: async (book) => {
     try {
       set({ loading: true, error: null });
@@ -95,7 +90,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Додати книгу до списку прочитаних
   addToReadList: async (book) => {
     try {
       set({ loading: true, error: null });
@@ -129,7 +123,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Видалити книгу зі списку бажаних
   removeFromWishlist: async (bookId) => {
     try {
       set({ loading: true, error: null });
@@ -150,7 +143,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Видалити книгу зі списку прочитаних
   removeFromReadList: async (bookId) => {
     try {
       set({ loading: true, error: null });
@@ -171,7 +163,6 @@ export const useBookStore = create<BookState>((set, get) => ({
     }
   },
 
-  // Пошук книг
 searchBooks: async (query) => {
   try {
     if (!query.trim()) {
@@ -182,7 +173,7 @@ searchBooks: async (query) => {
     const { data, error } = await supabase
       .from('books')
       .select('*')
-      .or(`title.ilike.%${query}%,author.ilike.%${query}%`) // Пошук за назвою або автором
+      .or(`title.ilike.%${query}%,author.ilike.%${query}%`) 
       .order('title', { ascending: true });
     if (error) throw error;
     set({ books: data || [] });
@@ -194,6 +185,5 @@ searchBooks: async (query) => {
 },
 
 
-  // Очистити помилку
   clearError: () => set({ error: null }),
 }));

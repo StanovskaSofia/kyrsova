@@ -15,15 +15,16 @@ export const Login = () => {
     e.preventDefault();
     if (loading) return;
 
-    try {
-      if (isSignUp) {
-        await signUp(email, password);
-      } else {
-        await signIn(email, password);
-      }
-      navigate('/');
-    } catch (error) {
-      // Error is handled by the store
+    let isSuccess = false;
+
+    if (isSignUp) {
+      isSuccess = await signUp(email, password); 
+    } else {
+      isSuccess = await signIn(email, password); 
+    }
+
+    if (isSuccess) {
+      navigate('/'); 
     }
   };
 
@@ -86,7 +87,10 @@ export const Login = () => {
 
           <div className="mt-6">
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                clearError();
+                setIsSignUp(!isSignUp);
+              }}
               className="w-full text-center text-sm text-pink-600 hover:text-pink-500"
               disabled={loading}
             >
